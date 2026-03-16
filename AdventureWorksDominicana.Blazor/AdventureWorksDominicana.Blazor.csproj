@@ -22,4 +22,8 @@
     <PackageReference Include="Aplicada1.Core" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\ShipMethodPages\" />
+  </ItemGroup>
+
 </Project>
