@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace AdventureWorksDominicana.Services
 {
-    internal class CountryRegionsService(IDbContextFactory<Contexto> DbFactory) : IService<CountryRegion, string>
+    public class CountryRegionsService(IDbContextFactory<Contexto> DbFactory) : IService<CountryRegion, string>
     {
         public async Task<bool> Guardar(CountryRegion entidad)
         {
