@@ -1,5 +1,6 @@
 using AdventureWorksDominicana.Blazor.Components;
 using AdventureWorksDominicana.Data.Context;
+using AdventureWorksDominicana.Services;
 using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,10 @@ builder.Services.AddDbContextFactory<Contexto>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<CountryRegionsService>();
+
 builder.Services.AddBlazoredToast();
+builder.Services.AddBlazorBootstrap();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
