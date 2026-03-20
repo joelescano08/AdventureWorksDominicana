@@ -59,6 +59,9 @@ public class ContactTypeService(IDbContextFactory<Contexto> DbFactory) : IServic
     public async Task<bool> Eliminar(int id)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
+        var contactType = await Buscar(id);
+        // Evita eliminar un tipo de contacto que tenga BusinessEntityContacts
+        if (contactType.BusinessEntityContacts.Count != 0) return false;
         return await contexto.ContactTypes.Where(c => c.ContactTypeId == id).ExecuteDeleteAsync() > 0;
     }
 
