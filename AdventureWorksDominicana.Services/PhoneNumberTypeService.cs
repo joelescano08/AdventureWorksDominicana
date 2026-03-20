@@ -46,6 +46,11 @@ public class PhoneNumberTypeService(IDbContextFactory<Contexto> DbFactory) : ISe
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.PhoneNumberTypes.FirstOrDefaultAsync(p => p.PhoneNumberTypeId == id);
     }
+    public async Task<bool> BuscarDuplicado(string nombre, int id)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.PhoneNumberTypes.AnyAsync(p => p.Name.ToLower().Equals(nombre.Trim().ToLower()) && p.PhoneNumberTypeId != id);
+    }
 
     public async Task<bool> Eliminar(int id)
     {
