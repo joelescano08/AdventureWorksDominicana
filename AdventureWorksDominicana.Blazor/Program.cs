@@ -17,7 +17,7 @@ builder.Services.AddBlazoredToast();
 builder.Services.AddScoped<ShipMethodService>();
 builder.Services.AddScoped<CountryRegionsService>();
 builder.Services.AddScoped<PhoneNumberTypeService>();
-
+builder.Services.AddScoped<VendorService>();
 builder.Services.AddScoped<DepartmentService>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<ShiftService>();
