@@ -23,23 +23,29 @@ public partial class Vendor
     /// <summary>
     /// Vendor account (identification) number.
     /// </summary>
+    [Required(ErrorMessage = "El número de cuenta es obligatorio.")]
     [StringLength(15)]
     public string AccountNumber { get; set; } = null!;
 
     /// <summary>
     /// Company name.
     /// </summary>
-    [StringLength(50)]
+    [Required(ErrorMessage = "El nombre es obligatorio.")]
+    [StringLength(50, ErrorMessage = "Máximo 50 caracteres.")]
     public string Name { get; set; } = null!;
 
     /// <summary>
     /// 1 = Superior, 2 = Excellent, 3 = Above average, 4 = Average, 5 = Below average
     /// </summary>
+    /// 
+
+    [Range(1, 5, ErrorMessage = "El crédito debe estar entre 1 y 5.")]
     public byte CreditRating { get; set; }
 
     /// <summary>
     /// 0 = Do not use if another vendor is available. 1 = Preferred over other vendors supplying the same product.
     /// </summary>
+    
     public bool PreferredVendorStatus { get; set; }
 
     /// <summary>
@@ -51,7 +57,8 @@ public partial class Vendor
     /// Vendor URL.
     /// </summary>
     [Column("PurchasingWebServiceURL")]
-    [StringLength(1024)]
+    [StringLength(1024, ErrorMessage = "Máximo 1024 caracteres.")]
+    [Url(ErrorMessage = "Debe ser una URL válida.")]
     public string? PurchasingWebServiceUrl { get; set; }
 
     /// <summary>
