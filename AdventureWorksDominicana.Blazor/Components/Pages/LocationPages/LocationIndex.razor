@@ -119,7 +119,6 @@
         EndDate = DateTime.Today.Date.AddDays(1);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
-        await Buscar();
         
 
         LocationsList = await locationService.GetList(l => true);
