@@ -1,0 +1,163 @@
+﻿@page "/ProductInventory/Index"
+
+@inject NavigationManager navigationManager
+@inject ProductInventoryService productInventoryService
+@rendermode InteractiveServer
+
+<PageTitle>ProductInventory</PageTitle>
+
+<div class="container-fluid">
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-content-center">
+            <h3 class="mb-0">Product Inventory</h3>
+            <a class="btn btn-primary" href="/ProductInventory/Create"><i class="bi bi-plus-square"></i> Crear</a>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="form-label">Desde</label>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Hasta</label>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Filtro:</label>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Buscar:</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2">
+                        <InputDate class="form-control" @bind-Value="Desde" />
+                    </div>
+                    <div class="col-3">
+                        <InputDate class="form-control" @bind-Value="Hasta" />
+                    </div>
+                    <div class="col-3">
+                        <InputSelect class="form-select" @bind-Value="Filtros">
+                            <option disabled value="">Filtrar...</option>
+                            <option value="ProductId">Producto (ID)</option>
+                            <option value="ProductName">Producto (Nombre)</option>
+                            <option value="LocationId">Ubicación (ID)</option>
+                            <option value="LocationName">Ubicación (Nombre)</option>
+                            <option value="Shelf">Shelf</option>
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-3">
+                        <div class="input-group">
+                            <InputText class="form-control" @bind-Value="ValorFiltro" placeholder="Buscar..." />
+                            <button class="btn btn-primary" @onclick="Buscar">
+                                <i class="bi bi-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary bi bi-arrow-counterclockwise" @onclick="Restablecer"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <QuickGrid Items="ListaInventories" Class="table table-striped table-bordered table-hover">
+                    <PropertyColumn Property="@(e => e.ProductId)" Sortable="true" Title="Producto ID" />
+                    <TemplateColumn Title="Producto">
+                        @(context.Product?.Name ?? "—")
+                    </TemplateColumn>
+
+                    <PropertyColumn Property="@(e => e.LocationId)" Sortable="true" Title="Ubicación ID" />
+                    <TemplateColumn Title="Ubicación">
+                        @(context.Location?.Name ?? "—")
+                    </TemplateColumn>
+
+                    <PropertyColumn Property="@(e => e.Shelf)" Sortable="true" Title="Shelf" />
+                    <PropertyColumn Property="@(e => e.Bin)" Sortable="true" Title="Bin" />
+                    <PropertyColumn Property="@(e => e.Quantity)" Sortable="true" Title="Cantidad" />
+
+                    <PropertyColumn Property="@(e => e.ModifiedDate)" Format="dd/MM/yyyy" Title="Fecha de modificación" Sortable="true" />
+
+                    <TemplateColumn Class="text-center align-middle" Title="Acción">
+                        <a class="btn btn-outline-primary btn-" href="/ProductInventory/Edit/@context.ProductId/@context.LocationId">
+                            <i class="bi bi-pencil-square"></i> Modificar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
+        </div>
+
+        <div class="card-footer text-end">
+            <strong>Conteo Registros: </strong> @ListaInventories.Count()
+        </div>
+    </div>
+</div>
+
+@code {
+    public IQueryable<ProductInventory> ListaInventories { get; set; } = Enumerable.Empty<ProductInventory>().AsQueryable();
+    public string Filtros { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+    public DateTime? Desde { get; set; }
+    public DateTime? Hasta { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Buscar();
+    }
+
+    public async Task Buscar()
+    {
+        List<ProductInventory> listaResultante;
+
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
+        {
+            if (Filtros == "ProductId" && int.TryParse(ValorFiltro, out int productId))
+            {
+                listaResultante = await productInventoryService.GetList(x => x.ProductId == productId);
+            }
+            else if (Filtros == "ProductName")
+            {
+                listaResultante = await productInventoryService.GetList(x =>
+                    (x.Product != null && x.Product.Name.ToLower().Contains(ValorFiltro.ToLower())));
+            }
+            else if (Filtros == "LocationId" && short.TryParse(ValorFiltro, out short locationId))
+            {
+                listaResultante = await productInventoryService.GetList(x => x.LocationId == locationId);
+            }
+            else if (Filtros == "LocationName")
+            {
+                listaResultante = await productInventoryService.GetList(x =>
+                    (x.Location != null && x.Location.Name.ToLower().Contains(ValorFiltro.ToLower())));
+            }
+            else if (Filtros == "Shelf")
+            {
+                listaResultante = await productInventoryService.GetList(x =>
+                    x.Shelf.ToLower().Contains(ValorFiltro.ToLower()));
+            }
+            else
+            {
+                listaResultante = await productInventoryService.GetList(x => true);
+            }
+        }
+        else
+        {
+            listaResultante = await productInventoryService.GetList(x => true);
+        }
+
+        if (Desde.HasValue)
+            listaResultante = listaResultante.Where(x => x.ModifiedDate >= Desde.Value).ToList();
+        if (Hasta.HasValue)
+            listaResultante = listaResultante.Where(x => x.ModifiedDate <= Hasta.Value).ToList();
+
+        ListaInventories = listaResultante.AsQueryable();
+    }
+
+    private async Task Restablecer()
+    {
+        Desde = null;
+        Hasta = null;
+        ValorFiltro = string.Empty;
+        Filtros = string.Empty;
+        await Buscar();
+    }
+}

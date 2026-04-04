@@ -1,0 +1,125 @@
+﻿@page "/ProductInventory/Edit/{ProductId:int}/{LocationId:short}"
+
+@inject ProductInventoryService productInventoryService
+@inject ToastService toastService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>ProductInventory Edit</PageTitle>
+
+<EditForm Model="ProductInventory" FormName="editarProductInventory" OnValidSubmit="Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h3>Editar Product Inventory</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Producto</strong></label>
+                    <input class="form-control" type="number" value="@ProductInventory.ProductId" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Ubicación</strong></label>
+                    <input class="form-control" type="number" value="@ProductInventory.LocationId" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Shelf</strong></label>
+                    <input class="form-control" type="text" maxlength="10" @bind-value="ProductInventory.Shelf" />
+                    <ValidationMessage For="(() => ProductInventory.Shelf)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Bin</strong></label>
+                    <input class="form-control" type="number" min="0" max="255" step="1" @bind-value="ProductInventory.Bin" />
+                    <ValidationMessage For="(() => ProductInventory.Bin)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Cantidad</strong></label>
+                    <input class="form-control" type="number" min="0" step="1" @bind-value="ProductInventory.Quantity" />
+                    <ValidationMessage For="(() => ProductInventory.Quantity)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Fecha de modificación</strong></label>
+                    <input class="form-control" type="datetime-local" @bind-value="ProductInventory.ModifiedDate" disabled />
+                    <ValidationMessage For="(() => ProductInventory.ModifiedDate)" />
+                </div>
+
+                @if (ProductInventory.Product == null || ProductInventory.Location == null)
+                {
+                    <div class="alert alert-warning mt-3">
+                        No se pudieron cargar los datos relacionados (Producto/Ubicación).
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer text-center">
+                <a class="btn btn-secondary bi bi-arrow-left" href="/ProductInventory/Index"> Volver</a>
+                <button class="btn btn-primary bi bi-floppy" type="submit"> Guardar</button>
+                <button class="btn btn-danger bi bi-trash" type="button" @onclick="Eliminar"> Eliminar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    [Parameter]
+    public short LocationId { get; set; }
+
+    public ProductInventory ProductInventory { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var entity = await productInventoryService.Buscar(ProductId, LocationId);
+
+        if (entity == null)
+        {
+            toastService.ShowError("No se encontró el product inventory especificado.");
+            navigationManager.NavigateTo("/ProductInventory/Index");
+            return;
+        }
+
+        ProductInventory = entity;
+        ProductInventory.ModifiedDate = DateTime.Now; 
+    }
+
+    public async Task Modificar()
+    {
+        bool modificado = await productInventoryService.Guardar(ProductInventory);
+
+        if (modificado)
+        {
+            toastService.ShowSuccess("Product inventory modificado exitosamente.");
+            navigationManager.NavigateTo("/ProductInventory/Index");
+        }
+        else
+        {
+            toastService.ShowError("Ha ocurrido un error al modificar (posible FK).");
+        }
+    }
+
+    public async Task Eliminar()
+    {
+        bool eliminado = await productInventoryService.Eliminar(ProductInventory.ProductId, ProductInventory.LocationId);
+
+        if (eliminado)
+        {
+            toastService.ShowSuccess("Product inventory eliminado exitosamente.");
+            navigationManager.NavigateTo("/ProductInventory/Index");
+        }
+        else
+        {
+            toastService.ShowError("El product inventory está en uso y no puede eliminarse.");
+        }
+    }
+}
