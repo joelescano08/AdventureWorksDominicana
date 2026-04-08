@@ -1,10 +1,12 @@
 ﻿@page "/Account/RegisterConfirmation"
 @using System.Text
 @using Microsoft.AspNetCore.Identity
-@using AdventureWorksDominicana.Data.Models
+@using Microsoft.AspNetCore.WebUtilities
+@using AdventureWorksDominicana.Data.Context
 
 @inject UserManager<AspNetUser> UserManager
 @inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
 @inject IEmailSender<AspNetUser> EmailSender
 
 <PageTitle>Confirmar Registro | AdventureWorks</PageTitle>
@@ -28,7 +30,10 @@
             {
                 <div class="aw-alert-dev">
                     <p class="aw-auth-subtitle">
-                        <i class="bi bi-exclamatation-triangle"></i> <strong>Modo Desarrollo:</strong> Tu app no tiene un servidor de correos real.
+                        <i class="bi bi-exclamation-triangle"></i> <strong>Modo Desarrollo:</strong> Tu aplicación no tiene un servidor de correos configurado.
+                    </p>
+                    <p class="aw-auth-subtitle" style="font-size: 0.85rem; margin-bottom: 20px;">
+                        Normalmente esto se enviaría por email, pero puedes confirmar la cuenta haciendo clic abajo:
                     </p>
                     <a href="@emailConfirmationLink" class="aw-btn-login text-decoration-none">
                         Confirmar Cuenta Aquí <i class="bi bi-shield-check"></i>
@@ -38,12 +43,14 @@
             else
             {
                 <p class="aw-auth-subtitle" style="margin-bottom: 35px;">
-                    Te hemos enviado un enlace de confirmación a tu correo. Por favor, revisa tu bandeja de entrada para activar tu cuenta.
+                    Te hemos enviado un enlace de confirmación a tu correo electrónico. Por favor, revisa tu bandeja de entrada para activar tu cuenta.
                 </p>
                 
-                <a href="https://mail.google.com/" target="_blank" class="aw-btn-login text-decoration-none">
-                    Ir a mi Correo <i class="bi bi-google"></i>
-                </a>
+                <div class="aw-action-group" style="width: 100%;">
+                    <a href="https://mail.google.com/" target="_blank" class="aw-btn-login text-decoration-none">
+                        Ir a mi Correo <i class="bi bi-google"></i>
+                    </a>
+                </div>
             }
 
             <div class="aw-back-link">
@@ -56,90 +63,40 @@
     </div>
 </div>
 
-            @if (EmailSender.GetType().Name == "IdentityNoOpEmailSender" && !string.IsNullOrEmpty(DevCode))
-            {
-                <div class="alert alert-warning">
-                    <strong>Aviso de Desarrollo:</strong> No hay un servidor de correos configurado. Tu código de prueba es: <code style="font-size: 1.2rem; font-weight: bold;">@DevCode</code>
-                </div>
-            }
-
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-danger" role="alert">
-                    @ErrorMessage
-                </div>
-            }
-
-
-            <EditForm Model="Input" method="post" OnValidSubmit="VerifyCode" FormName="verifyCode">
-                <DataAnnotationsValidator />
-                
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Code" class="form-control" placeholder="123456" />
-                    <label>Código de Verificación</label>
-                    <ValidationMessage For="() => Input.Code" class="text-danger" />
-                </div>
-
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Verificar y Confirmar</button>
-            </EditForm>
-        }
-    </div>
-</div>
-
 @code {
-    [SupplyParameterFromQuery]
-    public string? Email { get; set; }
+    private string? emailConfirmationLink;
+    private string? statusMessage;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromQuery]
-    public string? ReturnUrl { get; set; }
+    private string? Email { get; set; }
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
-
-    private string? ErrorMessage;
-    private string? DevCode;
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Generar codigo
-        if (Email is not null && EmailSender.GetType().Name == "IdentityNoOpEmailSender")
+        if (Email is null)
         {
-            var user = await UserManager.FindByEmailAsync(Email);
-            if (user is not null)
-            {
-                DevCode = await UserManager.GenerateTwoFactorTokenAsync(user, "Email");
-            }
-        }
-    }
-
-    public async Task VerifyCode()
-    {
-        if (string.IsNullOrEmpty(Email))
-        {
-            ErrorMessage = "Falta el correo electrónico.";
+            RedirectManager.RedirectTo("");
             return;
         }
 
         var user = await UserManager.FindByEmailAsync(Email);
-        if (user == null)
-        {
-            ErrorMessage = "Usuario no encontrado en la base de datos.";
-            return;
-        }
-        
-        // Verificar codigo que ingresa usuario
-        var isTokenValid = await UserManager.VerifyTwoFactorTokenAsync(user, "Email", Input.Code);
-
-        if (isTokenValid)
+        if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             statusMessage = "Error: No se encontró el usuario para el correo especificado.";
         }
-        else
+        else if (EmailSender is IdentityNoOpEmailSender)
         {
+
             var userId = await UserManager.GetUserIdAsync(user);
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            
             emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
                 NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
