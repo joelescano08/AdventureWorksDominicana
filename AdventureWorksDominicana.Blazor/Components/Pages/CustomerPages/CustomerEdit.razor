@@ -1,0 +1,154 @@
+﻿@page "/Customer/Edit/{id:int}"
+
+@using AdventureWorksDominicana.Data.Models
+@using AdventureWorksDominicana.Data.Context
+@using Microsoft.EntityFrameworkCore
+@inject CustomerService customerService
+@inject ToastService toastService
+@inject NavigationManager navigationManager
+@inject Contexto contexto
+
+
+@if (customer == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model="customer" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <div class="container">
+            <div class="card shadow-lg">
+                <div class="card-header d-flex justify-content-between">
+                    <h4>Editar Customer</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Ultima fecha de modificaci&oacute;n:</strong></label>
+                        <label class="form-label">@customer.ModifiedDate</label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Person</strong></label>
+                        <InputSelect min="1" class="form-select" @bind-Value="customer.PersonId">
+                            <option value="">Seleccione una persona...</option>
+                            @foreach (var p in ListaPeople)
+                            {
+                                <option value="@p.BusinessEntityId">@p.FirstName @p.LastName</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Store</strong></label>
+                        <InputSelect min="1" class="form-select" @bind-Value="customer.StoreId">
+                            <option value="">Seleccione una tienda...</option>
+                            @foreach (var s in ListaStores)
+                            {
+                                <option value="@s.BusinessEntityId">@s.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Territory</strong></label>
+                        <InputSelect min="1" class="form-select" @bind-Value="customer.TerritoryId">
+                            <option value="">Seleccione un territorio...</option>
+                            @foreach (var t in ListaTerritories)
+                            {
+                                <option value="@t.TerritoryId">@t.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => customer.TerritoryId)" />
+
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Account Number:</strong></label>
+                        <label class="form-label"> @customer.AccountNumber</label>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-secondary bi bi-arrow-left" href="/Customer/Index"> Volver</a>
+                    <button class="btn btn-primary bi bi-floppy" type="submit"> Guardar</button>
+                    <button class="btn btn-danger bi bi-trash" type="button" @onclick="Eliminar"> Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Customer? customer;
+    private List<Person> ListaPeople = new();
+    private List<Store> ListaStores = new();
+    private List<SalesTerritory> ListaTerritories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ListaPeople = await contexto.People.OrderBy(p => p.BusinessEntityId).ToListAsync();
+            ListaStores = await contexto.Stores.OrderBy(s => s.BusinessEntityId).ToListAsync();
+            ListaTerritories = await contexto.SalesTerritories.OrderBy(t => t.TerritoryId).ToListAsync();
+
+            customer = await customerService.Buscar(id);
+            if (customer == null) toastService.ShowError("Customer no encontrado.");
+        }
+        catch (Exception)
+        {
+            toastService.ShowError("Error al cargar los datos.");
+        }
+    }
+
+    private async Task Guardar()
+    {
+        if (customer == null) return;
+        customer.ModifiedDate = DateTime.Now;
+
+        if (customer.TerritoryId == 0 || customer.TerritoryId == null)
+        {
+            toastService.ShowWarning("Seleccione un territorio valido. El campo es obligatorio.");
+            return;
+        }
+        if (customer.StoreId == 0 || customer.StoreId == null)
+        {
+            toastService.ShowWarning("Seleccione un Store valido. El campo es obligatorio.");
+            return;
+        }
+        if (customer.PersonId == 0 || customer.PersonId == null)
+        {
+            toastService.ShowWarning("Seleccione un person valido. El campo es obligatorio.");
+            return;
+        }
+        try
+        {
+            var modificado = await customerService.Guardar(customer);
+            if (modificado)
+            {
+                toastService.ShowSuccess("Customer modificado correctamente.");
+                navigationManager.NavigateTo("/Customer/Index");
+            }
+            else
+            {
+                toastService.ShowError("El customer no se pudo modificar, revise los campos e intente de nuevo.");
+            }
+        }
+        catch (Exception)
+        {
+            toastService.ShowError("Ha ocurrido un error inesperado al intentar modificar el customer.");
+        }
+    }
+    private async Task Eliminar()
+    {
+        bool eliminado = await customerService.Eliminar(customer.CustomerId);
+        if (eliminado)
+        {
+            toastService.ShowSuccess("El customerha sido eliminado con exito!");
+            navigationManager.NavigateTo("/Customer/Index");
+        }
+        else
+        {
+            toastService.ShowError("Ha ocurrido un error al intentar eliminar el customer.");
+        }
+
+    }
+}
