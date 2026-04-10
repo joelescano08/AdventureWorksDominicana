@@ -67,11 +67,11 @@
 .review-product-card {
     display: flex;
     gap: 15px;
-    background: white;
     border-radius: 16px;
     padding: 15px;
-    border: 1px solid #e5e7eb;
     transition: 0.25s;
+    background-color: #F0F0F0;
+    border: 2px solid #E6E6E6;
 }
 
     .review-product-card:hover {

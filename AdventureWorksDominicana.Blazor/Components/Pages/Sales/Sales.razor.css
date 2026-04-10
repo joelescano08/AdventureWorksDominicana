@@ -94,12 +94,12 @@
 
 /* ===== CARD ===== */
 .sale-product-card {
-    background: white;
     border-radius: 16px;
     padding: 15px;
     transition: 0.3s;
-    border: 1px solid #eee;
     cursor: pointer;
+    background-color: #F0F0F0;
+    border: 2px solid #E6E6E6;
 }
 
     .sale-product-card:hover {
