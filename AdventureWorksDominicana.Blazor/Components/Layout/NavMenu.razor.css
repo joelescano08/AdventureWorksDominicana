@@ -17,13 +17,14 @@
 
 .top-row {
     min-height: 3.5rem;
-    padding: 8px 0px 8px 0px !important;
-    text-align: center;
-    background-color: rgba(0,0,0,0.4);
+    padding: 0 10px !important;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0,0,0,0.75);
 }
 
 .navbar-brand {
-    font-size: 1.1rem;
+    height: auto;
 }
 
 .bi {
@@ -211,27 +212,16 @@
 .nav-scrollable {
     overflow-y: auto;
     max-height: 100vh;
-    scrollbar-width: thin;
-    scrollbar-color: #6c757d #343a40;
 }
 
     .nav-scrollable::-webkit-scrollbar {
         width: 6px;
     }
 
-    .nav-scrollable::-webkit-scrollbar-track {
-        background: #343a40;
-        border-radius: 3px;
-    }
-
     .nav-scrollable::-webkit-scrollbar-thumb {
-        background: #6c757d;
-        border-radius: 3px;
+        background: #4F7EFF;
+        border-radius: 10px;
     }
-
-        .nav-scrollable::-webkit-scrollbar-thumb:hover {
-            background: #adb5bd;
-        }
 
 .accordion-button {
     font-size: 0.9rem;

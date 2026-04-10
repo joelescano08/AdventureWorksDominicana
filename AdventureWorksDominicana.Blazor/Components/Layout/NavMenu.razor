@@ -2,7 +2,9 @@
 
 <div class="top-row navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">AdventureWorks Dominicana</a>
+        <a class="d-flex align-items-center" href="/Home/Page">
+            <img src="logo-long.svg" class="img-fluid" />
+        </a>
     </div>
 </div>
 
@@ -13,7 +15,7 @@
         
         @* ========== HOME MODULE ========== *@
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="/Home/Page" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> <small>Home</small>
             </NavLink>
         </div>
@@ -33,7 +35,7 @@
                                 <span class="bi bi-receipt-nav-menu"></span> <small>Sales</small>
                             </NavLink>
                         </div>
-                        <div class="nav-item pt-2">
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="/TransactionHistory/Index">
                                 <span class="bi bi-clock-history-nav-menu"></span> <small>Transactions Histories</small>
                             </NavLink>
@@ -213,6 +215,11 @@
             </div>
         </div>
 
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/Customer/Index">
+                <span class="bi bi-people-nav-menu" aria-hidden="true"></span> Customers
+            </NavLink>
+        </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="/Store/Index">
@@ -220,12 +227,6 @@
             </NavLink>
         </div>
 
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Customer/Index">
-                <span class="bi bi-people-nav-menu" aria-hidden="true"></span> Customers
-            </NavLink>
-        </div>
 
         <AuthorizeView>
             <Authorized>
@@ -253,10 +254,7 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
     </nav>
-
-        
 </div>
 
        

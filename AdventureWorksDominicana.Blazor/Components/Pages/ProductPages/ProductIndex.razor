@@ -3,93 +3,95 @@
 @inject ProductService productService;
 @rendermode InteractiveServer
 
-<div class="container">
-    <div class="card shadow-lg">
-        <div class="card-header d-flex justify-content-between">
-            <h4>Products</h4>
-            <a class="btn btn-primary bi bi-plus-square" href="/Product/Create"> Crear</a>
+<div class="product-container">
+
+    <!-- HEADER -->
+    <div class="product-header">
+        <div>
+            <h3>Productos</h3>
+            <span>Gestión y consulta de catálogo</span>
         </div>
-        <div class="card-body">
-            @* Encabezados *@
-            <div class="row">
-                <div class="col-3">
-                    <label>Desde (Modificación):</label>
-                </div>
-                <div class="col-3">
-                    <label>Hasta (Modificación):</label>
-                </div>
-                <div class="col-3">
-                    <label>Filtro:</label>
-                </div>
-                <div class="col-3">
-                    <label>Buscar:</label>
-                </div>
+
+        <a class="btn btn-primary" href="/Product/Create">
+            <i class="bi bi-plus-square"></i> Crear
+        </a>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="product-filters">
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label">Desde</label>
+                <input class="form-control" type="datetime-local" @bind="FechaDesde" />
             </div>
 
-            @* Inputs *@
-            <div class="row pb-3">
-                <div class="col-3">
-                    <input class="form-control" type="datetime-local" @bind-value="FechaDesde" />
-                </div>
-                <div class="col-3">
-                    <input class="form-control" type="datetime-local" @bind-value="FechaHasta" />
-                </div>
-                <div class="col-3">
-                    <select class="form-select" @bind="Filtro">
-                        <option value="" disabled selected hidden>Seleccione un filtro...</option>
-                        <option value="Nombre">Nombre del Producto</option>
-                        <option value="Numero">Número/SKU</option>
-                        <option value="Subcategoria">Subcategoría</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <div class="input-group">
-                        <input class="form-control" type="text" @bind-value="ValorFiltro" placeholder="Buscar..." />
-                        <button class="btn btn-primary bi bi-search" type="button" @onclick="Filtrar"></button>
-                        <button class="btn btn-outline-primary bi bi-arrow-clockwise" type="button" @onclick="Restablecer"></button>
-                    </div>
-                </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label">Hasta</label>
+                <input class="form-control" type="datetime-local" @bind="FechaHasta" />
             </div>
 
-            <div class="table-responsive">
-                <QuickGrid Class="table table-striped table-bordered table-hover" Pagination="@pages" Items="ListaProducts.AsQueryable()" ItemKey="@(p => p.ProductId)">
-                    <PropertyColumn Property="@(p => p.ProductId)" Sortable="true" Title="Id"></PropertyColumn>
-                    <PropertyColumn Property="@(p => p.ProductNumber)" Sortable="true" Title="SKU"></PropertyColumn>
-                    <PropertyColumn Property="@(p => p.Name)" Sortable="true" Title="Nombre"></PropertyColumn>
-                    
-                    <TemplateColumn Class="text-left" Context="product" Title="Subcategoría">
-                        @if (product.ProductSubcategory != null)
-                        {
-                            <span>@product.ProductSubcategory.Name</span>
-                        }
-                        else
-                        {
-                            <span class="text-muted">N/A</span>
-                        }
-                    </TemplateColumn>
-
-                    <PropertyColumn Property="@(p => p.StandardCost)" Sortable="true" Format="C2" Title="Costo"></PropertyColumn>
-                    <PropertyColumn Property="@(p => p.ListPrice)" Sortable="true" Format="C2" Title="Precio"></PropertyColumn>
-                    
-                    <TemplateColumn Class="text-center" Context="product" Title="Estado">
-                        @if (product.SellEndDate == null)
-                        {
-                            <span class="badge bg-success">Activo</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Inactivo</span>
-                        }
-                    </TemplateColumn>
-                    
-                    <TemplateColumn Class="text-center" Context="options" Title="Acci&oacute;n">
-                        <a href="/Product/Edit/@options.ProductId" class="btn btn-outline-primary bi bi-pencil-square"> Modificar</a>
-                    </TemplateColumn>
-                </QuickGrid>
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label">Filtro</label>
+                <select class="form-select" @bind="Filtro">
+                    <option value="">Seleccione...</option>
+                    <option value="Nombre">Nombre</option>
+                    <option value="Numero">SKU</option>
+                    <option value="Subcategoria">Subcategoría</option>
+                </select>
             </div>
-            @*Pagination*@
-            <Paginator State="@pages" />
+
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label">Buscar</label>
+                <div class="input-group">
+                    <input class="form-control" @bind="ValorFiltro" placeholder="Buscar..." />
+                    <button class="btn btn-primary" @onclick="Filtrar">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button class="btn btn-outline-primary" @onclick="Restablecer">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive product-table">
+
+        <QuickGrid Class="table table-hover" Items="ListaProducts.AsQueryable()" Pagination="@pages" ItemKey="@(p => p.ProductId)">
+
+            <PropertyColumn Property="@(p => p.ProductId)" Title="ID" />
+            <PropertyColumn Property="@(p => p.ProductNumber)" Title="SKU" />
+            <PropertyColumn Property="@(p => p.Name)" Title="Nombre" />
+
+            <TemplateColumn Context="p" Title="Subcategoría">
+                @(p.ProductSubcategory?.Name ?? "N/A")
+            </TemplateColumn>
+
+            <PropertyColumn Property="@(p => p.StandardCost)" Format="C2" Title="Costo" />
+            <PropertyColumn Property="@(p => p.ListPrice)" Format="C2" Title="Precio" />
+
+            <TemplateColumn Context="p" Title="Estado">
+                @if (p.SellEndDate == null)
+                {
+                    <span class="badge bg-success">Activo</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactivo</span>
+                }
+            </TemplateColumn>
+
+            <TemplateColumn Class="text-center" Context="p" Title="Acciones">
+                <a href="/Product/Edit/@p.ProductId" class="btn btn-sm btn-outline-primary">
+                    <span class="bi bi-pencil"></span> Modificar
+                </a>
+            </TemplateColumn>
+
+        </QuickGrid>
+
+        <Paginator State="@pages" />
+
     </div>
 </div>
 
@@ -99,7 +101,7 @@
     public DateTime? FechaHasta { get; set; }
     public string Filtro { get; set; } = "";
     public string ValorFiltro { get; set; } = "";
-    private PaginationState pages = new PaginationState { ItemsPerPage = 10 }; // Cambiado a 10 porque el catálogo suele ser amplio
+    private PaginationState pages = new PaginationState { ItemsPerPage = 5 };
 
     protected override async Task OnInitializedAsync()
     {
