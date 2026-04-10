@@ -168,7 +168,7 @@
             usuario.Roles.Clear();
             usuario.Roles.Add(rolNuevo);
             var guardado = await userService.Guardar(usuario);
-        
+
             if (guardado)
             {
                 toastService.ShowSuccess("Usuario actualizado con éxito.");
@@ -187,6 +187,10 @@
         {
             toastService.ShowSuccess("Usuario eliminado.");
             navigationManager.NavigateTo("/User/Index");
+        }
+        else
+        {
+            toastService.ShowError("Error al eliminar.");
         }
     }
 }

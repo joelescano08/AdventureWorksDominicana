@@ -1,7 +1,9 @@
 ﻿@page "/User/Index"
-@* @attribute [Authorize(Roles = "Admin")] *@
+@attribute [Authorize(Roles = "Admin")]
 @inject NavigationManager navigationManager
 @inject UserService userService
+@inject ToastService toastService
+
 @rendermode InteractiveServer
 
 
@@ -11,6 +13,10 @@
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between">
             <h4>Users</h4>
+            <div class="form-check form-switch col-md-3">
+                <input class="form-check-input" type="checkbox" checked="@VerEliminados" @onchange="ToggleEliminados" id="chkEliminados">
+                    <label class="form-check-label" for="chkEliminados">Ver Papelera</label>
+                </div>
         </div>
         <div class="card-body">
             <div class="row g-3 mb-3">
@@ -48,9 +54,19 @@
 
                     <TemplateColumn Title="Acciones">
                         <div class="d-flex justify-content-center align-items-center">
-                            <a class="btn btn-outline-primary btn-sm" href="/User/Edit/@context.Id">
-                                <i class="bi bi-pencil-square"></i> Modificar
-                            </a>
+                            @if (VerEliminados)
+                            {
+                                <button class="btn btn-outline-success btn-sm" @onclick="() => Restaurar(context.Id)">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Restaurar
+                                </button>
+                            }
+                            else
+                            {
+                                    <a class="btn btn-outline-primary btn-sm" href="/User/Edit/@context.Id">
+                                        <i class="bi bi-pencil-square"></i> Modificar
+                                    </a>
+                            }
+                            
                         </div>
                     </TemplateColumn>
                 </QuickGrid>
@@ -67,12 +83,17 @@
     public IQueryable<AspNetUser> ListaUsuarios { get; set; } = Enumerable.Empty<AspNetUser>().AsQueryable();
     public string Filtros { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
+    bool VerEliminados = false;
 
     protected override async Task OnInitializedAsync()
     {
         await Buscar();
     }
-
+    private async Task ToggleEliminados(ChangeEventArgs e)
+    {
+        VerEliminados = (bool)e.Value;
+        await Buscar();
+    }
     public async Task Buscar()
     {
         List<AspNetUser> resultado;
@@ -98,6 +119,7 @@
             {
                 resultado = await userService.GetList(x => true);
             }
+            resultado = await userService.GetListConEliminados(VerEliminados, Filtros, ValorFiltro);
             ListaUsuarios = resultado.AsQueryable();
         }catch(Exception e)
         {
@@ -110,5 +132,13 @@
         ValorFiltro = string.Empty;
         Filtros = string.Empty;
         await Buscar();
+    }
+    private async Task Restaurar(string id)
+    {
+        if (await userService.RestaurarUsuario(id))
+        {
+            toastService.ShowSuccess("Usuario restaurado.");
+            navigationManager.NavigateTo("/User/Index");
+        }
     }
 }
