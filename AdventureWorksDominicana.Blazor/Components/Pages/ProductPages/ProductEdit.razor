@@ -19,15 +19,15 @@
             </div>
             <div class="card-body">
                 
-                <h5 class="pb-3 text-primary border-bottom">Informaci&oacute;n General</h5>
+                <h5 class="pb-3">Informaci&oacute;n General</h5>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label><strong>Nombre del Producto *</strong></label>
+                        <label><strong>Nombre del Producto</strong></label>
                         <input class="form-control" type="text" maxlength="50" @bind="Product.Name" />
                         <ValidationMessage For="(() => Product.Name)" />
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label><strong>SKU (N&uacute;mero) *</strong></label>
+                        <label><strong>SKU (N&uacute;mero)</strong></label>
                         <input class="form-control" type="text" maxlength="25" @bind="Product.ProductNumber" />
                         <ValidationMessage For="(() => Product.ProductNumber)" />
                     </div>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <h5 class="py-3 text-primary border-bottom">Inventario y Manufactura</h5>
+                <h5 class="pb-3">Inventario y Manufactura</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3 form-check ms-3 mt-4">
                         <input class="form-check-input" type="checkbox" @bind="Product.MakeFlag" />
@@ -49,12 +49,12 @@
                         <label><strong>¿Listo para venderse?</strong></label>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label><strong>D&iacute;as manu. *</strong></label>
+                        <label><strong>D&iacute;as manu.</strong></label>
                         <input class="form-control" type="number" @bind="Product.DaysToManufacture" />
                         <ValidationMessage For="(() => Product.DaysToManufacture)" />
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label><strong>Pto. Reorden *</strong></label>
+                        <label><strong>Pto. Reorden</strong></label>
                         <input class="form-control" type="number" @bind="Product.ReorderPoint" />
                         <ValidationMessage For="(() => Product.ReorderPoint)" />
                     </div>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <h5 class="py-3 text-primary border-bottom">Clasificaci&oacute;n</h5>
+                <h5 class="pb-3">Clasificaci&oacute;n</h5>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label><strong>Subcategor&iacute;a</strong></label>
@@ -89,20 +89,20 @@
                     </div>
                 </div>
 
-                <h5 class="py-3 text-primary border-bottom">Finanzas y Comercializaci&oacute;n</h5>
+                <h5 class="pb-3">Finanzas y Comercializaci&oacute;n</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label><strong>Costo Est&aacute;ndar *</strong></label>
+                        <label><strong>Costo Est&aacute;ndar</strong></label>
                         <input class="form-control" type="number" step="0.01" @bind="Product.StandardCost" />
                         <ValidationMessage For="(() => Product.StandardCost)" />
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label><strong>Precio de Lista *</strong></label>
+                        <label><strong>Precio de Lista</strong></label>
                         <input class="form-control" type="number" step="0.01" @bind="Product.ListPrice" />
                         <ValidationMessage For="(() => Product.ListPrice)" />
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label><strong>Inicio de Ventas *</strong></label>
+                        <label><strong>Inicio de Ventas</strong></label>
                         <input class="form-control" type="datetime-local" @bind="Product.SellStartDate" />
                         <ValidationMessage For="(() => Product.SellStartDate)" />
                     </div>
@@ -113,7 +113,7 @@
                 </div>
 
                 @* ================= BLOQUE MULTIMEDIA NUEVO ================= *@
-                <h5 class="py-3 text-primary border-bottom">Fotograf&iacute;a Principal</h5>
+                <h5 class="pb-3">Fotograf&iacute;a Principal</h5>
                 <div class="row align-items-center mb-3">
                     <div class="col-md-4 text-center">
                         @if (UrlImagenPreview != null)
@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                <h5 class="py-3 text-primary border-bottom">Dimensiones (Opcional)</h5>
+                <h5 class="pb-3">Dimensiones (Opcional)</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label><strong>Tama&ntilde;o</strong></label>
