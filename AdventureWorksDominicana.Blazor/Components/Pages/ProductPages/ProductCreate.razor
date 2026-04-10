@@ -1,4 +1,11 @@
 ﻿@page "/Product/Create"
+
+@inject ProductService productService;
+@inject ProductSubcategoryService subcategoryService;
+@inject ProductModelService modelService;
+@inject UnitMeasureService unitMeasureService;
+@inject ToastService toastService;
+@inject NavigationManager navigationManager;
 @rendermode InteractiveServer
 
 @inject ProductService productService
@@ -233,14 +240,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Product.ModifiedDate = DateTime.Now;
-        Product.SellStartDate = DateTime.Now;
-        Product.MakeFlag = false;
+        Product.MakeFlag = true;
         Product.FinishedGoodsFlag = true;
+        Product.SafetyStockLevel = 1000;
+        Product.ReorderPoint = 750;
+        Product.DaysToManufacture = 0;
+        Product.StandardCost = 0;
+        Product.ListPrice = 0;
+        Product.SellStartDate = DateTime.Now;
 
-        ListaSubcategorias = await productSubcategoryService.GetList(x => true);
-        ListaModelos = await productModelService.GetList(x => true);
-        ListaUnitMeasures = await unitMeasureService.GetList(x => true);
+        ListaSubcategorias = await subcategoryService.GetList(s => s.ProductSubcategoryId > 0);
+        ListaModelos = await modelService.GetList(m => m.ProductModelId > 0);
+        ListaUnidades = await unitMeasureService.GetList(u => true);
     }
 
     public async Task Guardar()
@@ -264,7 +275,6 @@
         }
 
         bool guardado = await productService.Guardar(Product);
-
         if (guardado)
         {
             toastService.ShowSuccess("Producto creado exitosamente.");
@@ -272,7 +282,7 @@
         }
         else
         {
-            toastService.ShowError("Ha ocurrido un error al guardar el producto.");
+            toastService.ShowError("Ha ocurrido un error inesperado al guardar el producto.");
         }
     }
 }
