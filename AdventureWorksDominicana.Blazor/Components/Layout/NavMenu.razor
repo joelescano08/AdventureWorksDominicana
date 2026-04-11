@@ -2,7 +2,9 @@
 
 <div class="top-row navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">AdventureWorks Dominicana</a>
+        <a class="d-flex align-items-center" href="/Home/Page">
+            <img src="logo-long.svg" class="img-fluid" />
+        </a>
     </div>
 </div>
 
@@ -13,7 +15,7 @@
         
         @* ========== HOME MODULE ========== *@
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink class="nav-link" href="/Home/Page" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> <small>Home</small>
             </NavLink>
         </div>
@@ -34,6 +36,11 @@
                             </NavLink>
                         </div>
                         <div class="nav-item">
+                            <NavLink class="nav-link" href="/TransactionHistory/Index">
+                                <span class="bi bi-clock-history-nav-menu"></span> <small>Transactions Histories</small>
+                            </NavLink>
+                        </div>
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="/SalesTerritory/Index">
                                 <span class="bi bi-map-fill-nav-menu"></span> <small>Sales Territories</small>
                             </NavLink>
@@ -43,11 +50,11 @@
                                 <span class="bi bi-currency-dollar-nav-menu"></span> <small>Currencies</small>
                             </NavLink>
                         </div>
-                        @* <div class="nav-item">
-                            <NavLink class="nav-link" href="/ShoppingCartItem/Index">
-                                <span class="bi bi-cart-plus-nav-menu"></span> <small>Shopping Cart</small>
+                        <div class="nav-item">
+                            <NavLink class="nav-link" href="/CurrencyRate/Index">
+                                <span class="bi bi-currency-exchange-nav-menu"></span> <small>Currencies Rates</small>
                             </NavLink>
-                        </div> *@
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,6 +98,11 @@
                         <div class="nav-item">
                             <NavLink class="nav-link" href="/Location/Index">
                                 <span class="bi bi-pin-map-nav-menu"></span> <small>Locations</small>
+                            </NavLink>
+                        </div>
+                        <div class="nav-item">
+                            <NavLink class="nav-link" href="/Product/Inventory">
+                                <span class="bi bi-pin-map-nav-menu"></span> <small>Inventario</small>
                             </NavLink>
                         </div>
                     </div>
@@ -208,8 +220,13 @@
                 <span class="bi bi-people-nav-menu" aria-hidden="true"></span> Customers
             </NavLink>
         </div>
-    </nav>
-</div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/Store/Index">
+                <span class="bi bi-shop-fill-nav-menu" aria-hidden="true"></span> Store
+            </NavLink>
+        </div>
+
 
         <AuthorizeView>
             <Authorized>
@@ -218,8 +235,8 @@
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="Account/Login" />
 
-                        <button type="submit" class="nav-link btn btn-link" style="text-align: left; width: 100%;">
-                            <span class="bi bi-box-arrow-right" aria-hidden="true"></span> <small>Salir</small>
+                        <button type="submit" class="nav-link ">
+                            <div><span class="bi bi-box-arrow-right" aria-hidden="true"></span></div> <small>Salir</small>
                         </button>
                     </form>
                 </div>
@@ -237,7 +254,10 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
-
     </nav>
 </div>
+
+       
+
+
+        

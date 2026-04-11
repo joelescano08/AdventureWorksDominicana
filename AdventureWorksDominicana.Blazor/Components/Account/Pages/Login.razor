@@ -26,11 +26,11 @@
                 
                 <div class="aw-brand-header">
                     <h2 class="aw-auth-title">Adventure<span>Works</span></h2>
-                    <p class="aw-auth-subtitle">Bienvenido de vuelta. Inicia sesión para continuar.</p>
+                    <p class="aw-auth-subtitle">Accede a tu cuenta para ver tus pedidos y continuar comprando.</p>
                 </div>
 
                 <div class="aw-input-group">
-                    <label for="Input.Email">Correo Electrónico</label>
+                    <label for="Input.Email">Correo electrónico</label>
                     <div class="aw-input-wrapper with-icon">
                         <i class="bi bi-envelope aw-input-icon"></i>
                         <InputText @bind-Value="Input.Email" id="Input.Email" class="aw-input-control" autocomplete="username" aria-required="true" placeholder="nombre@ejemplo.com" />
@@ -56,7 +56,7 @@
                 </div>
 
                 <button type="submit" class="aw-btn-login">
-                    Iniciar Sesión <i class="bi bi-arrow-right-short"></i>
+                    Iniciar sesión <i class="bi bi-arrow-right-short"></i>
                 </button>
 
                 <div class="aw-resend-email" style="margin-top: 30px;">
@@ -68,11 +68,15 @@
         <div class="aw-auth-register-col">
             <div class="aw-register-content">
                 <div class="aw-glow-icon">
-                    <i class="bi bi-rocket-takeoff"></i>
+                    <i class="bi bi-shop"></i>
                 </div>
-                <h2 class="aw-auth-title aw-title-white">¿Eres Nuevo Aquí?</h2>
-                <p class="aw-auth-text">Únete a nuestra comunidad hoy mismo y descubre las mejores herramientas para tu negocio.</p>
-                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" class="aw-btn-register">Crear una Cuenta</a>
+                <h2 class="aw-auth-title aw-title-white">¿Nuevo en AdventureWorks?</h2>
+
+                <p class="aw-auth-text">
+                    Crea una cuenta para comprar más rápido, guardar tus direcciones y hacer seguimiento a tus pedidos.
+                </p>
+                
+                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" class="aw-btn-register">Crear una Cuenta <span class="bi bi-arrow-right"></span></a>
             </div>
             
             <div class="aw-circle-deco deco-1"></div>

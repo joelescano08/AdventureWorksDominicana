@@ -4,28 +4,31 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #0B0F19;
+    background: #789EFF;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     z-index: 9999;
+    overflow-y: auto;
+    padding: 20px 0;
 }
 
 .aw-auth-card {
     display: flex;
-    width: 950px;
-    height: 650px;
-    background-color: #0F172A;
-    border: 1px solid #1E293B;
-    border-radius: 12px;
-    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.5);
+    width: 1000px;
+    min-height: 600px;
+    height: auto;
+    background-color: #B0B0B0;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1);
     overflow: hidden;
+    margin: auto;
 }
 
 .aw-auth-login-col {
     flex: 1.3;
-    background-color: #111827;
+    background-color: #F2F2F2;
     padding: 50px 60px;
     display: flex;
     flex-direction: column;
@@ -34,17 +37,17 @@
 
 .aw-auth-title {
     font-size: 2rem;
-    color: #FFFFFF;
+    color: #000000;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
     .aw-auth-title span {
-        color: #2563EB;
+        color: #3B82F6;
     }
 
 .aw-auth-subtitle {
-    color: #94A3B8;
+    color: #303030;
     margin-bottom: 25px;
     font-weight: 400;
 }
@@ -64,7 +67,7 @@
 
     .aw-input-group label {
         display: block;
-        color: #94A3B8;
+        color: #303030;
         font-size: 0.85rem;
         margin-bottom: 8px;
     }
@@ -79,17 +82,17 @@
 .aw-auth-wrapper ::deep .aw-input-control {
     width: 100%;
     height: 48px;
-    background-color: #0F172A;
-    border: 1px solid #1E293B;
-    border-radius: 6px;
-    color: white;
+    /*    background-color: #0F172A;*/
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: black;
     padding: 0 15px;
     box-sizing: border-box;
     transition: all 0.2s ease-in-out;
 }
 
     .aw-auth-wrapper ::deep .aw-input-control:focus {
-        border-color: #2563EB;
+        border-color: #3B82F6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         outline: none;
     }
@@ -115,7 +118,7 @@
 
 .aw-auth-register-col {
     flex: 1;
-    background: linear-gradient(135deg, #2563EB 0%, #0F172A 100%);
+    background: linear-gradient(135deg, #466EDB 0%, #01398C 100%);
     padding: 50px;
     display: flex;
     flex-direction: column;
