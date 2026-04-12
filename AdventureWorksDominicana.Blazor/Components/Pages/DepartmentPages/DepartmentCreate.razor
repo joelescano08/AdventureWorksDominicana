@@ -1,4 +1,6 @@
 ﻿@page "/Department/Create"
+@attribute [Authorize(Roles = "Admin")]
+
 @rendermode InteractiveServer
 @inject DepartmentService departmentService
 @inject PersonService personService

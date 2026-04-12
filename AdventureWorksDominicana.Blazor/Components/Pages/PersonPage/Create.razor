@@ -1,4 +1,6 @@
 ﻿@page "/Person/Create"
+@attribute [Authorize(Roles = "Admin")]
+
 @using AdventureWorksDominicana.Data.Models
 @using AdventureWorksDominicana.Services
 
