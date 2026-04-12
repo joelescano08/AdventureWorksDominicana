@@ -448,7 +448,7 @@
         if (!ShoppingCartItemList.Any())
         {
             toastService.ShowError("No hay productos en el carrito.");
-            navigationManager.NavigateTo("/Shoppingcart");
+            GoToCart();
         }
     }
 
