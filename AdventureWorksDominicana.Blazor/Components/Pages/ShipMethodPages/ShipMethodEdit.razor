@@ -1,5 +1,5 @@
 ﻿@page "/ShipMethods/Edit/{Id:int}"
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin, PurchasingManager")]
 
 @using AdventureWorksDominicana.Data.Models
 @using AdventureWorksDominicana.Services

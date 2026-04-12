@@ -1,5 +1,5 @@
 ﻿@page "/Vendor/Create";
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin, PurchasingManager")]
 
 @inject VendorService vendorService;
 @inject ToastService toastService;
