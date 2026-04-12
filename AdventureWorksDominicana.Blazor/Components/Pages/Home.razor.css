@@ -128,13 +128,13 @@
 }
 
 .category-card {
-    background: #f5f5f5;
+    background-color: #F5F5F5;
+    border: 2px solid #E6E6E6;
     padding: 24px 16px;
     border-radius: 16px;
     text-align: center;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
 }
 
     .category-card:hover {
@@ -189,7 +189,7 @@
     display: flex;
     gap: 20px;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding: 10px 10px;
     scroll-snap-type: x mandatory;
 }
 
@@ -203,8 +203,12 @@
     }
 
 .product-card {
-    min-width: 240px;
-    max-width: 240px;
+    border-radius: 16px;
+    padding: 15px;
+    transition: 0.3s;
+    cursor: pointer;
+    background-color: #F5F5F5;
+    border: 2px solid #E6E6E6;
     flex: 0 0 auto;
     scroll-snap-align: start;
 }
@@ -238,7 +242,7 @@
 .product-badge {
     position: absolute;
     top: 12px;
-    left: 12px;
+    right: 12px;
     background: #fbbf24;
     color: #333;
     font-size: 0.7rem;
@@ -276,7 +280,7 @@
 
 .btn-add {
     width: 100%;
-    background: linear-gradient(135deg, #466EDB 0%, #01398C 100%);
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
     color: white;
     border: none;
     padding: 8px;
@@ -305,6 +309,7 @@
     border-radius: 24px;
     padding: 32px 24px;
     margin-bottom: 50px;
+    border: 2px solid #E6E6E6;
 }
 
 .offer-card {
@@ -398,6 +403,7 @@
 
 .testimonial-card {
     background: #f9fafb;
+    border: 2px solid #E6E6E6;
     padding: 24px;
     border-radius: 16px;
     text-align: center;
@@ -441,7 +447,8 @@
 
 /* ==================== NEWSLETTER ==================== */
 .newsletter-section {
-    background: #f5f5f5;
+    background-color: #F5F5F5;
+    border: 2px solid #E6E6E6;
     border-radius: 24px;
     padding: 40px;
     text-align: center;
@@ -480,7 +487,7 @@
         }
 
 .btn-newsletter {
-    background: linear-gradient(135deg, #466EDB 0%, #01398C 100%);
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
     color: white;
     border: none;
     padding: 12px 24px;
