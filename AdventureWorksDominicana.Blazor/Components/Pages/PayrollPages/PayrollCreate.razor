@@ -3,10 +3,11 @@
 @inject NavigationManager navigationManager
 @inject ToastService toastService
 @inject PayrollService payrollService
+@attribute [Authorize(Roles = "Admin,HRManager")]
 
 @rendermode InteractiveServer
 
-<PageTitle>Crear Nómina</PageTitle>
+<PageTitle>Crear N&oacute;mina</PageTitle>
 
 <EditForm Model="NuevaNomina" OnValidSubmit="Guardar" FormName="FormularioCrearNomina">
     <DataAnnotationsValidator />
@@ -54,7 +55,7 @@
 
                 @if (NuevaNomina.PayrollDetails.Any())
                 {
-                    <h5 class="fw-bold text-secondary mb-3">Previsualización de Pagos</h5>
+                    <h5 class="fw-bold text-secondary mb-3">Previsualizaci&oacute;n de Pagos</h5>
                     
                     <div class="table-responsive">
                         <QuickGrid Items="NuevaNomina.PayrollDetails.AsQueryable()" Class="table table-striped table-bordered table-hover" Pagination="@pagesBorrador">
