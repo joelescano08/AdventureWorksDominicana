@@ -79,7 +79,7 @@
                                 </div>
                                 <div>
                                     <label>Estado/Provincia</label>
-                                    <InputSelect @bind-Value="NewShipAddress.StateProvinceId" class="form-select">
+                                    <InputSelect @bind-Value="NewShipAddress.StateProvinceId" class="form-select" @bind-Value:after="GetTaxes">
                                         <option value="0">Seleccione un Estado/Provincia</option>
                                         @foreach (var s in StateProvinceList)
                                         {
@@ -622,7 +622,26 @@
             subtotal += (p?.Product?.ListPrice ?? 0) * (p?.Quantity ?? 0);
     }
 
-    private void GetTaxes() => taxes = ShippingAddressesList.FirstOrDefault(t => t.AddressId == SalesOrderHeader.ShipToAddressId)?.StateProvince?.SalesTaxRates?.FirstOrDefault()?.TaxRate ?? 0;
+    private void GetTaxes(){
+        var taxRate = ShippingAddressesList
+        .FirstOrDefault(t => t.AddressId == SalesOrderHeader.ShipToAddressId)?
+        .StateProvince?
+        .SalesTaxRates?
+        .FirstOrDefault();
+
+        if (taxRate != null)
+        {
+            taxes = taxRate.TaxRate;
+        }
+        else
+        {
+            taxes = StateProvinceList
+                .FirstOrDefault(s => s.StateProvinceId == NewShipAddress.StateProvinceId)?
+                .SalesTaxRates?
+                .FirstOrDefault()?.TaxRate ?? 0;
+        }
+    }
+        
 
     private void GetFreight()
     {
