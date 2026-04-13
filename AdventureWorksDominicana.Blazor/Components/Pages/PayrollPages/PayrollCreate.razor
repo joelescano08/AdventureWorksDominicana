@@ -52,6 +52,20 @@
                     </button>
                 </div>
 
+                @* Mostrar los errores capturados *@
+                @if (ErroresDeCalculo.Any())
+                {
+                    <div class="alert alert-warning shadow-sm border-warning mb-4">
+                        <h6 class="fw-bold text-dark"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Empleados Omitidos</h6>
+                        <p class="small mb-2">Los siguientes empleados no fueron incluidos en este cálculo de nómina. Debe corregir sus perfiles antes de guardar:</p>
+                        <ul class="mb-0 small text-danger fw-bold">
+                            @foreach(var error in ErroresDeCalculo)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
 
                 @if (NuevaNomina.PayrollDetails.Any())
                 {
@@ -64,7 +78,7 @@
                             <PropertyColumn Property="@(d => d.SfsDeduction)" Title="SFS" Format="N2" Class="text-danger" />
                             <PropertyColumn Property="@(d => d.AfpDeduction)" Title="AFP" Format="N2" Class="text-danger" />
                             <PropertyColumn Property="@(d => d.IsrDeduction)" Title="ISR" Format="N2" Class="text-danger" />
-                            <PropertyColumn Property="@(d => d.NetSalary)" Title="Sueldo Neto" Format="N2" Class="fw-bold" Sortable="true" />
+                            <PropertyColumn Property="@(d => d.NetSalary)" Title="Sueldo Neto" Format="N2" Class="fw-bold text-success" Sortable="true" />
                         </QuickGrid>
                     </div>
 
@@ -76,7 +90,7 @@
 
             <div class="card-footer text-center">
                 <a class="btn btn-secondary bi bi-arrow-left" href="/Payroll/Index"> Volver</a>
-                <button type="submit" class="btn btn-success bi bi-floppy" disabled="@(!NuevaNomina.PayrollDetails.Any())"> Guardar</button>
+                <button type="submit" class="btn btn-success bi bi-floppy" disabled="@(!NuevaNomina.PayrollDetails.Any())"> Guardar N&oacute;mina</button>
             </div>
         </div>
     </div>
@@ -90,6 +104,9 @@
         Status = PayrollStatus.Borrador
     };
 
+    // lista para atrapar los errores
+    private List<string> ErroresDeCalculo = new List<string>();
+
     private PaginationState pagesBorrador = new PaginationState { ItemsPerPage = 5 };
 
     private async Task CalcularBorrador()
@@ -97,8 +114,19 @@
         try
         {
             NuevaNomina.PayrollDetails.Clear();
-            await payrollService.ProcesarNomina(NuevaNomina);
-            toastService.ShowSuccess("Cálculos procesados correctamente.");
+            ErroresDeCalculo.Clear(); // Limpiamos errores anteriores
+            
+            // la lista que devuelve el servicio
+            ErroresDeCalculo = await payrollService.ProcesarNomina(NuevaNomina);
+
+            if (ErroresDeCalculo.Any())
+            {
+                toastService.ShowWarning("Cálculo finalizado con advertencias. Revisa la lista de empleados omitidos.");
+            }
+            else
+            {
+                toastService.ShowSuccess("Cálculos procesados correctamente para todos los empleados activos.");
+            }
         }
         catch (Exception ex)
         {
