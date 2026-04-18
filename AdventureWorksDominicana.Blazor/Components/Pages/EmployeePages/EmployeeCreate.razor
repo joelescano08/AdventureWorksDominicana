@@ -231,6 +231,14 @@
             return;
         }
 
+        //validacion de cuenta Bancaria
+        if (string.IsNullOrWhiteSpace(Employee.BankAccountNumber) || Employee.BankAccountNumber.Length < 10)
+        {
+            errorCuenta = true;
+            mensajeError = "El número de cuenta debe tener al menos 10 dígitos.";
+            return;
+        }
+
         // Convierto a dolares para que SQL Server no explote con los limites de la BD original
         decimal initialRateUSD = InitialRateDOP / TasaCambio;
 
